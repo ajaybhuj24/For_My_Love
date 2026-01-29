@@ -1,0 +1,954 @@
+/* style.css */
+
+:root {
+  --bg1: #0b1020;
+  --bg2: #0b1b3a;
+  --card: rgba(255, 255, 255, 0.08);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.72);
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  --radius: 22px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, #1a2a6b00 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  overflow-x: hidden;
+}
+
+/* 3D canvas behind everything */
+#bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: min(1050px, 92vw);
+  margin: 32px auto 70px;
+  display: grid;
+  gap: 18px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 22px;
+}
+
+.hero {
+  padding: 26px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* Hover target for confetti */
+.heroHover {
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.heroHover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: 0.2px;
+}
+
+.name {
+  background: linear-gradient(90deg, #ffd6e7, #fff2b6, #c4f1ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+  line-height: 1.55;
+  color: var(--muted);
+  font-size: 15.5px;
+}
+
+.small {
+  opacity: 0.85;
+  font-size: 13px;
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.heroActions {
+  margin-top: 14px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 16px 0;
+}
+
+.quick-notes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* Sections */
+.sectionTitle {
+  margin: 0;
+  font-size: 20px;
+}
+.sectionDesc {
+  margin: 8px 0 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Gallery */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 950px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 650px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.imgCard {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.2);
+  transform-style: preserve-3d;
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease;
+  height: 170px;
+  position: relative;
+}
+.imgCard:hover {
+  transform: perspective(800px) rotateX(4deg) rotateY(-4deg) translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.imgCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.footer {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  padding: 6px 0 0;
+}
+
+/* ---------- Gift Overlay ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(
+      900px 500px at 50% 30%,
+      rgba(255, 255, 255, 0.1),
+      transparent 60%
+    ),
+    rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 18px;
+  transition:
+    opacity 420ms ease,
+    transform 420ms ease;
+}
+.overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+
+.giftCard {
+  width: min(560px, 92vw);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+  padding: 22px;
+  text-align: center;
+}
+
+.giftTop {
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35));
+}
+
+.giftTitle {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: 0.2px;
+}
+.giftText {
+  margin: 10px 0 16px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.giftBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+  font-size: 15px;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+.giftBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(0, 0, 0, 0.36);
+}
+.giftIcon {
+  font-size: 18px;
+}
+.giftHint {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ---------- Content reveal animation ---------- */
+.hiddenContent {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+.showContent {
+  opacity: 1;
+  transform: translateY(0px);
+  pointer-events: auto;
+  transition:
+    opacity 500ms ease,
+    transform 500ms ease;
+}
+
+/* ---------- Countdown ---------- */
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+@media (max-width: 650px) {
+  .countdown {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.timeBox {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px 12px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+.num {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.label {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+.countdownMsg {
+  margin-top: 14px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ---------- Modal ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+.modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Make modal card responsive and body scrollable */
+.modalCard {
+  width: min(620px, 92vw);
+  max-height: min(78vh, 720px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+  padding: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.modalHeader {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 10px 10px 0;
+}
+.modalIcon {
+  font-size: 36px;
+}
+.modalTitle {
+  margin: 8px 0 0;
+}
+.modalSub {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+}
+
+.modalBody {
+  flex: 1 1 auto;
+  overflow: auto;
+  margin-top: 10px;
+  padding: 14px 14px 18px;
+  border-radius: 18px;
+}
+
+.modalFooter {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 4px;
+}
+
+/* ---------- Letter paper: texture + handwritten font (ONLY inside modal body) ---------- */
+.letterPaper {
+  background:
+    radial-gradient(
+      900px 260px at 20% 0%,
+      rgba(255, 255, 255, 0.16),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 220px at 80% 20%,
+      rgba(255, 255, 255, 0.11),
+      transparent 55%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 18px 50px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* handwritten only for letter area */
+.letterPaper,
+.letterPaper p,
+.letterPaper div {
+  font-family: "Caveat", cursive;
+  font-size: 22px;
+  line-height: 1.65;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.letterPaper p {
+  margin: 0 0 14px;
+}
+
+.letterSalute {
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.letterEmphasis {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.letterSignOff {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.18);
+}
+
+.signature {
+  margin-top: 6px;
+  font-family: "Caveat", cursive;
+  font-weight: 700;
+  font-size: 34px;
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+/* Scrollbar styling (optional, clean look) */
+.modalBody::-webkit-scrollbar {
+  width: 10px;
+}
+.modalBody::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+}
+.modalBody::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+.modalBody::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ---------- Reasons Flip Cards ---------- */
+.reasonsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 950px) {
+  .reasonsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 650px) {
+  .reasonsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.flipCard {
+  height: 170px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+  perspective: 1000px;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+.flipCard:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.flipInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 500ms ease;
+}
+
+/* hover OR toggled via JS */
+.flipCard:hover .flipInner,
+.flipCard.flipped .flipInner {
+  transform: rotateY(180deg);
+}
+
+.flipFront,
+.flipBack {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  backface-visibility: hidden;
+}
+
+.flipFront {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+}
+
+.flipBack {
+  transform: rotateY(180deg);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.flipTag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.flipBig {
+  font-size: 40px;
+  line-height: 1;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.35));
+}
+
+.flipTitle {
+  margin-top: 8px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.flipHint {
+  position: absolute;
+  bottom: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ---------- Polaroid Captions ---------- */
+.caption {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+.imgCard:hover .caption,
+.imgCard.showCaption .caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Easter Egg Secret Message ---------- */
+.secretMsg {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+.secretMsg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Heart Click Trail ---------- */
+.heart {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 7;
+  font-size: 18px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+  animation: heartFloat 900ms ease-out forwards;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+}
+
+@keyframes heartFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -120px) scale(1.35);
+  }
+}
+
+/* ---------- Cursor Sparkles ---------- */
+.sparkle {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  z-index: 6;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+  transform: translate(-50%, -50%);
+  animation: sparkleFade 520ms ease-out forwards;
+  opacity: 0.9;
+}
+
+@keyframes sparkleFade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -80px) scale(1.35);
+  }
+}
+/* =========================
+   Scratch Card
+========================= */
+/* =========================
+   Scratch Card (Reveal Image)
+========================= */
+.scratchWrap {
+  position: relative;
+  width: min(980px, 100%);
+  margin: 10px auto 0;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.scratchUnder {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  min-height: 320px;
+  overflow: hidden;
+}
+
+/* The hidden image */
+
+/* After reveal */
+.scratchWrap.revealed .scratchImg {
+  filter: blur(0) saturate(1);
+  opacity: 1;
+  transform: scale(1);
+}
+/* The hidden image */
+.scratchImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  /* show full image (no crop) */
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.22); /* letterbox background */
+  padding: 10px; /* gives breathing space */
+
+  /* Hidden at start */
+  filter: blur(14px) saturate(0.9);
+  transform: scale(1);
+  opacity: 0.25;
+  transition:
+    filter 450ms ease,
+    opacity 450ms ease;
+}
+
+/* After reveal */
+.scratchWrap.revealed .scratchImg {
+  filter: blur(0) saturate(1);
+  opacity: 1;
+}
+
+/* Caption overlay (HIDDEN until revealed) */
+.scratchCaption {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 20px;
+  pointer-events: none;
+
+  /* keep caption readable */
+  background: radial-gradient(
+    700px 260px at 50% 60%,
+    rgba(0, 0, 0, 0.35),
+    transparent 62%
+  );
+
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 350ms ease,
+    transform 350ms ease;
+}
+
+/* Show caption only after reveal */
+.scratchWrap.revealed .scratchCaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Caption on top of the image */
+
+.scratchBig {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.scratchMsg {
+  margin-top: 8px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Cover canvas must sit on top */
+.scratchCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  opacity: 1;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* Reset button */
+.scratchActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+/* =========================
+   Balloon Game
+========================= */
+.gameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.scoreBox {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 10px 14px;
+  min-width: 110px;
+  text-align: center;
+}
+
+.scoreLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.scoreNum {
+  font-size: 26px;
+  font-weight: 900;
+  margin-top: 2px;
+}
+
+.gameArea {
+  position: relative;
+  margin-top: 12px;
+  height: 320px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.gameActions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.balloon {
+  position: absolute;
+  width: 54px;
+  height: 70px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  user-select: none;
+  cursor: pointer;
+  transform: translateY(0);
+  animation: floatUp linear forwards;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  width: 2px;
+  height: 24px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.balloon span {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.balloon.pop {
+  animation: pop 160ms ease-out forwards;
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(330px);
+  }
+  to {
+    transform: translateY(-110px);
+  }
+}
+
+@keyframes pop {
+  to {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}

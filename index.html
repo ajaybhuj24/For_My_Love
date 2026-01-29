@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Birthday Surprise for my Baby 🎁</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Handwritten font only for letter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- 3D Background Canvas -->
+    <canvas id="bg"></canvas>
+
+    <!-- Gift Intro Overlay -->
+    <div id="giftOverlay" class="overlay">
+      <div class="giftCard" role="dialog" aria-label="Open your birthday gift">
+        <div class="giftTop">🎁</div>
+        <h1 class="giftTitle">
+          A Birthday Surprise for <span class="name">Baby</span>
+        </h1>
+        <p class="giftText">Click the gift to open ✨</p>
+
+        <button
+          id="openGiftBtn"
+          class="giftBtn"
+          type="button"
+          aria-label="Open gift"
+        >
+          <span class="giftIcon">🎁</span>
+          <span class="giftBtnText">Open Gift</span>
+        </button>
+
+        <p class="giftHint">Made with ❤️</p>
+      </div>
+    </div>
+
+    <!-- Love Letter Modal -->
+    <div id="letterModal" class="modal" aria-hidden="true">
+      <div class="modalCard" role="dialog" aria-label="Love letter">
+        <button
+          id="closeLetterBtn"
+          class="modalClose"
+          type="button"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
+        <div class="modalHeader">
+          <div class="modalIcon">💌</div>
+          <h2 class="modalTitle">A Letter for Budi</h2>
+          <p class="modalSub">Just open it whenever you miss me 💛</p>
+        </div>
+
+        <!-- Scrollable paper area -->
+        <div class="modalBody letterPaper">
+          <p class="letterSalute">My Baby,</p>
+
+          <p>
+            Sometimes I smile for no reason, and then I realize—I’m thinking of
+            you.
+          </p>
+
+          <p>
+            Do you remember how our story began? I still find it funny and
+            magical at the same time. I saw you for the first time in a photo on
+            Facebook, and something inside me just… paused. I didn’t even know
+            you, but my heart already did. I liked you quietly, patiently, for
+            more than a year. A whole year of waiting, hoping, and wondering if
+            one day I’d have the courage to talk to you.
+          </p>
+
+          <p class="letterEmphasis">And then I did.</p>
+
+          <p>
+            From the moment we started talking, I knew I didn’t want to stop. I
+            flirted, teased you, tried to make you laugh, just to keep you
+            talking to me a little longer. Messages turned into chats, chats
+            into video calls, calls into sharing reels, and somewhere between
+            all those little moments… we fell in love without even realizing it.
+          </p>
+
+          <p>
+            I still smile when I think about how I proposed to you. You were
+            half asleep, your voice soft, your mind drifting, and yet you said
+            yes. Maybe you don’t remember it clearly—but I do. That sleepy “yes”
+            is one of the most precious things in my life.
+          </p>
+
+          <p>
+            Then we met. Face to face. And suddenly, everything felt real in the
+            most beautiful way. We went to different places, different
+            restaurants. I know I’m a huge eater—I’ll eat biryani, chowmein,
+            momos, samosa, dosa… everything in sight 😄 And you? You stick to
+            Chinese food like it’s a lifelong promise. We’re so different, yet
+            somehow we fit perfectly.
+          </p>
+
+          <p>
+            You don’t plan much, and I plan everything. You pull me into making
+            TikTok videos, and I pretend to resist—but honestly, I loved every
+            second of it. Making TikToks, reels, Insta reels with you… those
+            moments are not just videos on a phone. They’re memories I carry in
+            my heart.
+          </p>
+
+          <p>
+            Baby, the way you love me, the way you’re attached to me, the way
+            you choose me every day—it means more to me than I can ever fully
+            explain. You’ve become my comfort, my happiness, my favorite
+            notification, and my safest place.
+          </p>
+
+          <p>
+            If I had to wait another year, or a lifetime, just to end up with
+            you, I would. Because loving you is the easiest and best thing I’ve
+            ever done.
+          </p>
+
+          <p class="letterEmphasis">
+            I love you—more than words, more than food (and you know how serious
+            that is), more than anything.
+          </p>
+
+          <div class="letterSignOff">
+            <div>Always yours,</div>
+            <div class="signature">Babu ❤️</div>
+          </div>
+        </div>
+
+        <div class="modalFooter">
+          <button id="closeLetterBtn2" class="giftBtn" type="button">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Content -->
+    <main id="siteContent" class="container hiddenContent">
+      <!-- HERO -->
+      <section class="card hero">
+        <div class="hero-badge">🎂 Countdown mode</div>
+
+        <div id="heroHover" class="heroHover" aria-label="Birthday Hero Area">
+          <h1 class="title" id="heroTitle">
+            Your birthday is almost here, <span class="name">Baby</span> ✨
+          </h1>
+
+          <!-- Secret message (Easter egg) -->
+          <div id="secretMsg" class="secretMsg" aria-live="polite">
+            Okay you found it 😄💛 I love you!
+          </div>
+
+          <p class="subtitle" id="heroSubtitle">
+            I’m counting down the days until we celebrate you 🎂💛
+            <br />
+            <span class="small">(A surprise is waiting for Jan 31 🎁)</span>
+          </p>
+
+          <div class="hint">Hover here for confetti 🎊</div>
+
+          <div class="heroActions">
+            <button
+              id="openLetterBtn"
+              class="giftBtn"
+              type="button"
+              aria-label="Open love letter"
+            >
+              💌 Read My Letter
+            </button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="quick-notes">
+          <div class="chip">🎁 Surprise</div>
+          <div class="chip">📸 Memories</div>
+          <div class="chip">✨ 3D</div>
+        </div>
+      </section>
+
+      <!-- COUNTDOWN -->
+      <section class="card">
+        <h2 class="sectionTitle">Countdown to Baby's Birthday ⏳</h2>
+        <p class="sectionDesc">Time left until the big day 🎉</p>
+
+        <div class="countdown" id="countdown">
+          <div class="timeBox">
+            <div class="num" id="cdDays">0</div>
+            <div class="label">Days</div>
+          </div>
+          <div class="timeBox">
+            <div class="num" id="cdHours">00</div>
+            <div class="label">Hours</div>
+          </div>
+          <div class="timeBox">
+            <div class="num" id="cdMins">00</div>
+            <div class="label">Minutes</div>
+          </div>
+          <div class="timeBox">
+            <div class="num" id="cdSecs">00</div>
+            <div class="label">Seconds</div>
+          </div>
+        </div>
+
+        <div class="countdownMsg" id="countdownMsg"></div>
+      </section>
+      <!-- Scratch Card -->
+      <!-- Scratch & Reveal (Image) -->
+      <section class="card">
+        <h2 class="sectionTitle">Scratch & Reveal 🎁</h2>
+        <p class="sectionDesc">
+          Scratch the card to reveal a surprise image ✨
+        </p>
+
+        <div id="scratchWrap" class="scratchWrap" aria-label="Scratch card">
+          <!-- Under image (hidden/blurred until revealed) -->
+          <div class="scratchUnder">
+            <img
+              class="scratchImg"
+              src="images/surprise.jpeg"
+              alt="Surprise"
+              loading="lazy"
+            />
+
+            <!-- optional caption overlay on the image -->
+            <div class="scratchCaption">
+              <div class="scratchBig">✨ Surprise ✨</div>
+              <div class="scratchMsg">For my favorite person 💛</div>
+            </div>
+          </div>
+
+          <!-- Cover canvas -->
+          <canvas id="scratchCanvas" class="scratchCanvas"></canvas>
+        </div>
+
+        <!-- Reset button outside -->
+        <div class="scratchActions">
+          <button id="scratchResetBtn" class="giftBtn" type="button">
+            Reset Scratch
+          </button>
+        </div>
+      </section>
+
+      <!-- Balloon Pop Game -->
+      <section class="card">
+        <div class="gameHeader">
+          <div>
+            <h2 class="sectionTitle">Balloon Pop Game 🎈</h2>
+            <p class="sectionDesc">Pop as many balloons as you can!</p>
+          </div>
+
+          <div class="scoreBox" aria-label="Balloon pop score">
+            <div class="scoreLabel">Score</div>
+            <div class="scoreNum" id="balloonScore">0</div>
+          </div>
+        </div>
+
+        <div class="gameArea" id="balloonArea" aria-label="Balloon game area">
+          <!-- Balloons are generated by JS -->
+        </div>
+
+        <div class="gameActions">
+          <button id="balloonStartBtn" class="giftBtn" type="button">
+            Start Game
+          </button>
+          <button id="balloonResetBtn" class="giftBtn" type="button">
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <!-- REASONS FLIP CARDS -->
+      <section class="card">
+        <h2 class="sectionTitle">Reasons I Love You 💛</h2>
+        <p class="sectionDesc">Hover or tap a card to flip (edit anytime).</p>
+
+        <div class="reasonsGrid">
+          <div
+            class="flipCard"
+            tabindex="0"
+            role="button"
+            aria-label="Flip reason 1"
+          >
+            <div class="flipInner">
+              <div class="flipFront">
+                <div class="flipTag">Reason #1</div>
+                <div class="flipBig">✨</div>
+                <div class="flipTitle">Your Smile</div>
+                <div class="flipHint">Tap / Hover</div>
+              </div>
+              <div class="flipBack">
+                Your smile makes my day instantly better. 💛
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flipCard"
+            tabindex="0"
+            role="button"
+            aria-label="Flip reason 2"
+          >
+            <div class="flipInner">
+              <div class="flipFront">
+                <div class="flipTag">Reason #2</div>
+                <div class="flipBig">🌸</div>
+                <div class="flipTitle">Your Kindness</div>
+                <div class="flipHint">Tap / Hover</div>
+              </div>
+              <div class="flipBack">
+                You’re kind in a way that feels rare and real.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flipCard"
+            tabindex="0"
+            role="button"
+            aria-label="Flip reason 3"
+          >
+            <div class="flipInner">
+              <div class="flipFront">
+                <div class="flipTag">Reason #3</div>
+                <div class="flipBig">🌙</div>
+                <div class="flipTitle">Your Calm</div>
+                <div class="flipHint">Tap / Hover</div>
+              </div>
+              <div class="flipBack">
+                You make everything feel peaceful and safe.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flipCard"
+            tabindex="0"
+            role="button"
+            aria-label="Flip reason 4"
+          >
+            <div class="flipInner">
+              <div class="flipFront">
+                <div class="flipTag">Reason #4</div>
+                <div class="flipBig">🎈</div>
+                <div class="flipTitle">Your Fun</div>
+                <div class="flipHint">Tap / Hover</div>
+              </div>
+              <div class="flipBack">
+                Life feels lighter and happier with you.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flipCard"
+            tabindex="0"
+            role="button"
+            aria-label="Flip reason 5"
+          >
+            <div class="flipInner">
+              <div class="flipFront">
+                <div class="flipTag">Reason #5</div>
+                <div class="flipBig">🌟</div>
+                <div class="flipTitle">Your Heart</div>
+                <div class="flipHint">Tap / Hover</div>
+              </div>
+              <div class="flipBack">
+                You care deeply — and it shows in everything you do.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flipCard"
+            tabindex="0"
+            role="button"
+            aria-label="Flip reason 6"
+          >
+            <div class="flipInner">
+              <div class="flipFront">
+                <div class="flipTag">Reason #6</div>
+                <div class="flipBig">📸</div>
+                <div class="flipTitle">Our Memories</div>
+                <div class="flipHint">Tap / Hover</div>
+              </div>
+              <div class="flipBack">
+                Every memory with you feels special. Always.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="card">
+        <h2 class="sectionTitle">Our Memories 📷</h2>
+        <p class="sectionDesc">
+          Put your 12 photos in <b>images/</b> named <b>1.jpeg</b> to
+          <b>12.jpeg</b>. Hover (or tap) for polaroid captions ✨
+        </p>
+
+        <div class="grid" id="gallery">
+          <figure class="imgCard" data-caption="My favorite smile 💛">
+            <img src="images/1.jpeg" alt="Memory 1" />
+            <figcaption class="caption">My favorite smile 💛</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="This day >>> ✨">
+            <img src="images/2.jpeg" alt="Memory 2" />
+            <figcaption class="caption">This day >>> ✨</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Forever memory 📸">
+            <img src="images/3.jpeg" alt="Memory 3" />
+            <figcaption class="caption">Forever memory 📸</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="You + Me = Best 💛">
+            <img src="images/4.jpeg" alt="Memory 4" />
+            <figcaption class="caption">You + Me = Best 💛</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Pure happiness 🌸">
+            <img src="images/5.jpeg" alt="Memory 5" />
+            <figcaption class="caption">Pure happiness 🌸</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Our little world 🌙">
+            <img src="images/6.jpeg" alt="Memory 6" />
+            <figcaption class="caption">Our little world 🌙</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Best moment 🎈">
+            <img src="images/7.jpeg" alt="Memory 7" />
+            <figcaption class="caption">Best moment 🎈</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Always grateful 💛">
+            <img src="images/8.jpeg" alt="Memory 8" />
+            <figcaption class="caption">Always grateful 💛</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Cutest day ever 🥰">
+            <img src="images/9.jpeg" alt="Memory 9" />
+            <figcaption class="caption">Cutest day ever 🥰</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Just us ✨">
+            <img src="images/10.jpeg" alt="Memory 10" />
+            <figcaption class="caption">Just us ✨</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="My peace 🌿">
+            <img src="images/11.jpeg" alt="Memory 11" />
+            <figcaption class="caption">My peace 🌿</figcaption>
+          </figure>
+
+          <figure class="imgCard" data-caption="Love this moment 💛">
+            <img src="images/12.jpeg" alt="Memory 12" />
+            <figcaption class="caption">Love this moment 💛</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>Made with ❤️ for Baby</p>
+      </footer>
+    </main>
+
+    <!-- Confetti (must be before script.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <!-- Your JS -->
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
