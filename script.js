@@ -1,6 +1,95 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
 
 const heroHover = document.getElementById("heroHover");
+/* =========================================================
+   MUSIC PLAYER
+========================================================= */
+const musicAudio = document.getElementById("musicAudio");
+const musicBtn = document.getElementById("musicBtn");
+const musicBtnText = document.getElementById("musicBtnText");
+const musicStatus = document.getElementById("musicStatus");
+const musicSeek = document.getElementById("musicSeek");
+const musicCur = document.getElementById("musicCur");
+const musicDur = document.getElementById("musicDur");
+const musicVol = document.getElementById("musicVol");
+
+function fmtTime(sec) {
+  if (!isFinite(sec)) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function setPlayingUI(isPlaying) {
+  if (!musicBtnText) return;
+  musicBtnText.textContent = isPlaying ? "Pause" : "Play";
+  if (musicStatus)
+    musicStatus.textContent = isPlaying ? "Playing 💛" : "Paused";
+  if (musicBtn)
+    musicBtn.setAttribute("aria-label", isPlaying ? "Pause song" : "Play song");
+}
+
+if (musicAudio && musicBtn) {
+  // default volume
+  if (musicVol) musicAudio.volume = Number(musicVol.value || 0.8);
+
+  musicBtn.addEventListener("click", async () => {
+    try {
+      if (musicAudio.paused) {
+        await musicAudio.play(); // must be user click (browser rule)
+        setPlayingUI(true);
+      } else {
+        musicAudio.pause();
+        setPlayingUI(false);
+      }
+    } catch (err) {
+      if (musicStatus) musicStatus.textContent = "Tap again to allow audio 🎵";
+      console.warn("Audio play blocked:", err);
+    }
+  });
+
+  musicAudio.addEventListener("loadedmetadata", () => {
+    if (musicDur) musicDur.textContent = fmtTime(musicAudio.duration);
+    if (musicCur) musicCur.textContent = fmtTime(0);
+  });
+
+  musicAudio.addEventListener("timeupdate", () => {
+    if (musicCur) musicCur.textContent = fmtTime(musicAudio.currentTime);
+    if (musicSeek && isFinite(musicAudio.duration)) {
+      musicSeek.value = String(
+        (musicAudio.currentTime / musicAudio.duration) * 100,
+      );
+    }
+  });
+
+  musicAudio.addEventListener("ended", () => {
+    setPlayingUI(false);
+    if (musicSeek) musicSeek.value = "0";
+    if (musicCur) musicCur.textContent = "0:00";
+    if (musicStatus) musicStatus.textContent = "Finished 🎶";
+  });
+
+  if (musicSeek) {
+    let seeking = false;
+
+    musicSeek.addEventListener("pointerdown", () => (seeking = true));
+    window.addEventListener("pointerup", () => (seeking = false));
+
+    musicSeek.addEventListener("input", () => {
+      if (!isFinite(musicAudio.duration)) return;
+      const pct = Number(musicSeek.value) / 100;
+      musicAudio.currentTime = pct * musicAudio.duration;
+      if (!musicAudio.paused) setPlayingUI(true);
+      if (!seeking && musicStatus) musicStatus.textContent = "Playing 💛";
+    });
+  }
+
+  if (musicVol) {
+    musicVol.addEventListener("input", () => {
+      musicAudio.volume = Number(musicVol.value);
+    });
+  }
+}
 
 /* ---------- Birthday settings ---------- */
 const BDAY_MONTH = 1; // Jan
@@ -176,6 +265,12 @@ function openGift() {
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
+  if (musicAudio && musicAudio.paused) {
+    musicAudio
+      .play()
+      .then(() => setPlayingUI(true))
+      .catch(() => {});
+  }
 }
 if (openGiftBtn) openGiftBtn.addEventListener("click", openGift);
 
