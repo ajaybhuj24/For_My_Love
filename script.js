@@ -4,7 +4,7 @@ const heroHover = document.getElementById("heroHover");
 
 
 /* =========================================================
-   PIN LOCK (PIN = 9811)  [client-side gate]
+   PIN LOCK (PIN = )  [client-side gate]
    NOTE: asks for PIN again after refresh (no localStorage)
 ========================================================= */
 const pinOverlay = document.getElementById("pinOverlay");
@@ -12,7 +12,7 @@ const pinInput = document.getElementById("pinInput");
 const pinBtn = document.getElementById("pinBtn");
 const pinError = document.getElementById("pinError");
 
-// SHA-256("9811")
+// SHA-256("")
 const PIN_HASH =
   "f9e3ebbfd1b8975f9408d310959c05e6a80fd9517398a3758cc93dbcabb49673";
 
@@ -1016,5 +1016,6 @@ if (gameStartBtn) {
 } else {
   console.warn("Balloon game: #gameStartBtn not found in HTML.");
 }
+
 
 
