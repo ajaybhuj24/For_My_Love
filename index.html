@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title> Mero Babu 🎁</title>
+    <title>Birthday Surprise for my Baby 🎁</title>
 
     <link rel="stylesheet" href="style.css" />
 
@@ -100,7 +100,8 @@
             Then we met. Face to face. And suddenly, everything felt real in the
             most beautiful way. We went to different places, different
             restaurants. I know I’m a huge eater—I’ll eat biryani, chowmein,
-            momos, samosa, dosa… everything in sight 😄 And you? We’re so different, yet
+            momos, samosa, dosa… everything in sight 😄 And you? You stick to
+            Chinese food like it’s a lifelong promise. We’re so different, yet
             somehow we fit perfectly.
           </p>
 
@@ -148,7 +149,7 @@
     <main id="siteContent" class="container hiddenContent">
       <!-- HERO -->
       <section class="card hero">
-        <div class="hero-badge">🎂</div>
+        <div class="hero-badge">🎂 Countdown mode</div>
 
         <div id="heroHover" class="heroHover" aria-label="Birthday Hero Area">
           <h1 class="title" id="heroTitle">
@@ -185,6 +186,7 @@
         <div class="quick-notes">
           <div class="chip">🎁 Surprise</div>
           <div class="chip">📸 Memories</div>
+          <div class="chip">✨ 3D</div>
         </div>
       </section>
 
@@ -214,6 +216,64 @@
 
         <div class="countdownMsg" id="countdownMsg"></div>
       </section>
+      <!-- Song Player -->
+      <section class="card bgremovemusic">
+        <h2 class="sectionTitle">Our Song 🎵</h2>
+        <p class="sectionDesc">Tap play and enjoy 💛</p>
+
+        <div class="musicPlayer">
+          <button
+            id="musicBtn"
+            class="musicBtn"
+            type="button"
+            aria-label="Play song"
+          >
+            ▶️ <span id="musicBtnText">Play</span>
+          </button>
+
+          <div class="musicMeta">
+            <div class="musicTitle" id="musicTitle">Puja’s Song</div>
+            <div class="musicSub" id="musicStatus">Ready to play</div>
+
+            <input
+              id="musicSeek"
+              class="musicSeek"
+              type="range"
+              min="0"
+              max="100"
+              value="0"
+              step="0.1"
+              aria-label="Song progress"
+            />
+
+            <div class="musicTime">
+              <span id="musicCur">0:00</span>
+              <span id="musicDur">0:00</span>
+            </div>
+          </div>
+
+          <div class="musicRight">
+            <label class="musicVolWrap" aria-label="Volume">
+              🔊
+              <input
+                id="musicVol"
+                class="musicVol"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.8"
+              />
+            </label>
+          </div>
+
+          <!-- hidden audio -->
+          <audio id="musicAudio" preload="metadata">
+            <source src="audio/song.mp4" type="audio/mpeg" />
+          </audio>
+        </div>
+      </section>
+
       <!-- Scratch Card -->
       <!-- Scratch & Reveal (Image) -->
       <section class="card">
@@ -225,7 +285,7 @@
         <div id="scratchWrap" class="scratchWrap" aria-label="Scratch card">
           <!-- Under image (hidden/blurred until revealed) -->
           <div class="scratchUnder">
-           <img
+            <img
               class="scratchImg"
               src="images/surprise/1.jpeg"
               id="scratchImg"
@@ -405,7 +465,10 @@
       <!-- GALLERY -->
       <section class="card">
         <h2 class="sectionTitle">Our Memories 📷</h2>
-    
+        <p class="sectionDesc">
+          Put your 12 photos in <b>images/</b> named <b>1.jpeg</b> to
+          <b>12.jpeg</b>. Hover (or tap) for polaroid captions ✨
+        </p>
 
         <div class="grid" id="gallery">
           <figure class="imgCard" data-caption="My favorite smile 💛">
@@ -467,67 +530,6 @@
             <img src="images/12.jpeg" alt="Memory 12" />
             <figcaption class="caption">Love this moment 💛</figcaption>
           </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/13.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/14.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/15.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/16.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/17.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/18.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/19.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/20.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/21.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/22.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/23.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/24.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-           <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/25.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/26.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-            <figure class="imgCard" data-caption="Love this moment 💛">
-            <img src="images/27.jpeg" alt="Memory 12" />
-            <figcaption class="caption">Love this moment 💛</figcaption>
-          </figure>
-          
         </div>
       </section>
 
@@ -543,9 +545,3 @@
     <script type="module" src="script.js"></script>
   </body>
 </html>
-
-
-
-
-
-
