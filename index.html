@@ -19,7 +19,32 @@
   <body>
     <!-- 3D Background Canvas -->
     <canvas id="bg"></canvas>
+<!-- PIN Lock Overlay -->
+<div id="pinOverlay" class="pinOverlay" aria-hidden="false">
+  <div class="pinCard" role="dialog" aria-label="Enter PIN">
+    <div class="pinIcon">🔒</div>
+    <h2 class="pinTitle">Private Surprise</h2>
+    <p class="pinSub">Enter PIN to continue</p>
 
+    <div class="pinRow">
+      <input
+        id="pinInput"
+        class="pinInput"
+        type="password"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="••••"
+        aria-label="4 digit PIN"
+        autocomplete="off"
+      />
+      <button id="pinBtn" class="giftBtn" type="button">Unlock</button>
+    </div>
+
+    <p id="pinError" class="pinError" aria-live="polite"></p>
+
+    <div class="pinHint">Hint: 4 digits</div>
+  </div>
+</div>
     <!-- Gift Intro Overlay -->
     <div id="giftOverlay" class="overlay">
       <div class="giftCard" role="dialog" aria-label="Open your birthday gift">
@@ -575,5 +600,6 @@
     <script type="module" src="script.js"></script>
   </body>
 </html>
+
 
 
