@@ -1044,3 +1044,89 @@ body {
 .gameResult.show {
   display: block;
 }
+
+/* =========================
+   PIN LOCK OVERLAY
+========================= */
+.pinOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10; /* above gift overlay */
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background:
+    radial-gradient(900px 520px at 50% 30%, rgba(255, 255, 255, 0.10), transparent 60%),
+    rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.pinOverlay.hide {
+  display: none;
+}
+
+.pinCard {
+  width: min(520px, 92vw);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.10);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+  padding: 22px;
+  text-align: center;
+}
+
+.pinIcon {
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35));
+}
+
+.pinTitle {
+  margin: 0;
+  font-size: 22px;
+}
+
+.pinSub {
+  margin: 8px 0 14px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+}
+
+.pinRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.pinInput {
+  width: 180px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 18px;
+  letter-spacing: 6px;
+  text-align: center;
+  outline: none;
+}
+
+.pinInput:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.pinError {
+  min-height: 20px;
+  margin: 10px 0 0;
+  color: rgba(255, 180, 180, 0.95);
+  font-size: 13px;
+}
+
+.pinHint {
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.65);
+}
