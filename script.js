@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
 
 const heroHover = document.getElementById("heroHover");
+
 /* =========================================================
    MUSIC PLAYER
 ========================================================= */
@@ -23,20 +24,18 @@ function fmtTime(sec) {
 function setPlayingUI(isPlaying) {
   if (!musicBtnText) return;
   musicBtnText.textContent = isPlaying ? "Pause" : "Play";
-  if (musicStatus)
-    musicStatus.textContent = isPlaying ? "Playing 💛" : "Paused";
+  if (musicStatus) musicStatus.textContent = isPlaying ? "Playing 💛" : "Paused";
   if (musicBtn)
     musicBtn.setAttribute("aria-label", isPlaying ? "Pause song" : "Play song");
 }
 
 if (musicAudio && musicBtn) {
-  // default volume
   if (musicVol) musicAudio.volume = Number(musicVol.value || 0.8);
 
   musicBtn.addEventListener("click", async () => {
     try {
       if (musicAudio.paused) {
-        await musicAudio.play(); // must be user click (browser rule)
+        await musicAudio.play();
         setPlayingUI(true);
       } else {
         musicAudio.pause();
@@ -95,9 +94,63 @@ if (musicAudio && musicBtn) {
 const BDAY_MONTH = 1; // Jan
 const BDAY_DAY = 31; // 31st
 
-function isBirthdayToday(month, day) {
-  const now = new Date();
-  return now.getMonth() === month - 1 && now.getDate() === day;
+/* =========================================================
+   ✅ NEPAL TIMEZONE HELPERS (Asia/Kathmandu)
+========================================================= */
+const NEPAL_TZ = "Asia/Kathmandu";
+const NEPAL_OFFSET_MS = 345 * 60 * 1000; // +05:45
+
+function getNepalParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: NEPAL_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(date);
+
+  const map = {};
+  for (const p of parts) map[p.type] = p.value;
+
+  return {
+    year: Number(map.year),
+    month: Number(map.month),
+    day: Number(map.day),
+    hour: Number(map.hour),
+    minute: Number(map.minute),
+    second: Number(map.second),
+  };
+}
+
+function isBirthdayTodayNepal(month, day) {
+  const np = getNepalParts();
+  return np.month === month && np.day === day;
+}
+
+// Returns NEXT birthday moment as UTC ms, where the birthday moment is 00:00 Nepal time.
+function getNextBirthdayUtcMsNepal(month, day) {
+  const np = getNepalParts();
+
+  const todayKey = np.year * 10000 + np.month * 100 + np.day;
+  const bdayKeyThisYear = np.year * 10000 + month * 100 + day;
+
+  const targetYear = todayKey > bdayKeyThisYear ? np.year + 1 : np.year;
+
+  // Nepal midnight -> UTC = Nepal time - 5:45
+  return Date.UTC(targetYear, month - 1, day, 0, 0, 0) - NEPAL_OFFSET_MS;
+}
+
+function formatNepalDate(utcMs) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: NEPAL_TZ,
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(utcMs));
 }
 
 /* ---------- Fireworks (birthday day only) ---------- */
@@ -136,7 +189,7 @@ const heroSubtitle = document.getElementById("heroSubtitle");
 function setHeroMessage() {
   if (!heroTitle || !heroSubtitle) return;
 
-  if (isBirthdayToday(BDAY_MONTH, BDAY_DAY)) {
+  if (isBirthdayTodayNepal(BDAY_MONTH, BDAY_DAY)) {
     heroTitle.innerHTML = `Happy Birthday, <span class="name">Baby</span> 🎉✨`;
     heroSubtitle.innerHTML = `
       Today is your day 💛 I hope you feel loved, celebrated, and super happy.
@@ -161,17 +214,6 @@ const countdownMsg = document.getElementById("countdownMsg");
 
 let birthdayConfettiDone = false;
 
-function getNextBirthdayDate(month, day) {
-  const now = new Date();
-  const year = now.getFullYear();
-  let target = new Date(year, month - 1, day, 0, 0, 0);
-
-  if (target.getTime() <= now.getTime()) {
-    target = new Date(year + 1, month - 1, day, 0, 0, 0);
-  }
-  return target;
-}
-
 function pad2(n) {
   return String(n).padStart(2, "0");
 }
@@ -179,15 +221,15 @@ function pad2(n) {
 function updateCountdown() {
   if (!cdDays || !cdHours || !cdMins || !cdSecs) return;
 
-  const now = new Date();
-
-  if (isBirthdayToday(BDAY_MONTH, BDAY_DAY)) {
+  // ✅ Birthday based on Nepal date
+  if (isBirthdayTodayNepal(BDAY_MONTH, BDAY_DAY)) {
     cdDays.textContent = "0";
     cdHours.textContent = "00";
     cdMins.textContent = "00";
     cdSecs.textContent = "00";
+
     if (countdownMsg)
-      countdownMsg.textContent = "🎉 It’s baby's Birthday! Happy Birthday!";
+      countdownMsg.textContent = "🎉 It’s baby's Birthday (Nepal time)! Happy Birthday!";
 
     if (!fireworksDone) {
       fireworksDone = true;
@@ -205,8 +247,9 @@ function updateCountdown() {
     return;
   }
 
-  const target = getNextBirthdayDate(BDAY_MONTH, BDAY_DAY);
-  const diffMs = target.getTime() - now.getTime();
+  // ✅ Next birthday moment is Nepal midnight (00:00 NPT)
+  const targetMs = getNextBirthdayUtcMsNepal(BDAY_MONTH, BDAY_DAY);
+  const diffMs = targetMs - Date.now();
   const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
 
   const days = Math.floor(totalSeconds / (3600 * 24));
@@ -220,7 +263,7 @@ function updateCountdown() {
   cdSecs.textContent = pad2(secs);
 
   if (countdownMsg)
-    countdownMsg.textContent = `Next birthday: ${target.toDateString()}`;
+    countdownMsg.textContent = `Next birthday (Nepal time): ${formatNepalDate(targetMs)}`;
 
   fireworksDone = false;
   birthdayConfettiDone = false;
@@ -236,7 +279,7 @@ function burstConfetti() {
   if (now - lastConfetti < 450) return;
   lastConfetti = now;
 
-  if (isBirthdayToday(BDAY_MONTH, BDAY_DAY)) {
+  if (isBirthdayTodayNepal(BDAY_MONTH, BDAY_DAY)) {
     runFireworks(900);
     return;
   }
@@ -254,7 +297,7 @@ const openGiftBtn = document.getElementById("openGiftBtn");
 const siteContent = document.getElementById("siteContent");
 
 function openGift() {
-  if (isBirthdayToday(BDAY_MONTH, BDAY_DAY)) runFireworks(2500);
+  if (isBirthdayTodayNepal(BDAY_MONTH, BDAY_DAY)) runFireworks(2500);
   else
     confetti({ particleCount: 180, spread: 90, origin: { x: 0.5, y: 0.45 } });
 
@@ -265,6 +308,7 @@ function openGift() {
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
+
   if (musicAudio && musicAudio.paused) {
     musicAudio
       .play()
@@ -349,9 +393,7 @@ document.querySelectorAll(".flipCard").forEach((card) => {
 
 /* ---------- Polaroid captions: tap/click to show (mobile) ---------- */
 document.querySelectorAll(".imgCard").forEach((figure) => {
-  figure.addEventListener("click", () =>
-    figure.classList.toggle("showCaption"),
-  );
+  figure.addEventListener("click", () => figure.classList.toggle("showCaption"));
 });
 
 /* ---------- Heart click trail ---------- */
@@ -458,13 +500,11 @@ function drawCover() {
 
   const rect = scratchCanvas.getBoundingClientRect();
 
-  // base cover
   ctx.globalCompositeOperation = "source-over";
   ctx.clearRect(0, 0, rect.width, rect.height);
   ctx.fillStyle = "rgba(255,255,255,0.20)";
   ctx.fillRect(0, 0, rect.width, rect.height);
 
-  // soft gradient sheen
   const g = ctx.createLinearGradient(0, 0, rect.width, rect.height);
   g.addColorStop(0, "rgba(255,255,255,0.22)");
   g.addColorStop(0.5, "rgba(255,255,255,0.08)");
@@ -472,7 +512,6 @@ function drawCover() {
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, rect.width, rect.height);
 
-  // subtle dots
   ctx.fillStyle = "rgba(255,255,255,0.10)";
   for (let i = 0; i < 120; i++) {
     const x = Math.random() * rect.width;
@@ -483,12 +522,10 @@ function drawCover() {
     ctx.fill();
   }
 
-  // hint text on cover
   ctx.fillStyle = "rgba(255,255,255,0.72)";
   ctx.font = "600 20px system-ui, -apple-system, Segoe UI, Roboto, Arial";
   ctx.textAlign = "center";
   ctx.fillText("Scratch here ✨", rect.width / 2, rect.height / 2);
-
   ctx.textAlign = "start";
 }
 
@@ -506,7 +543,6 @@ function scratchAt(clientX, clientY) {
 
 function getScratchedPercent(step = 10) {
   if (!ctx || revealed) return 0;
-  const rect = scratchCanvas.getBoundingClientRect();
   const img = ctx.getImageData(
     0,
     0,
@@ -517,10 +553,9 @@ function getScratchedPercent(step = 10) {
   let cleared = 0;
   let total = 0;
 
-  // sample pixels (fast)
   for (let y = 0; y < scratchCanvas.height; y += step * dpr) {
     for (let x = 0; x < scratchCanvas.width; x += step * dpr) {
-      const idx = (y * scratchCanvas.width + x) * 4 + 3; // alpha
+      const idx = (y * scratchCanvas.width + x) * 4 + 3;
       total++;
       if (img[idx] === 0) cleared++;
     }
@@ -547,8 +582,6 @@ function revealAll() {
 function onMove(clientX, clientY) {
   scratchAt(clientX, clientY);
   const percent = getScratchedPercent(12);
-
-  // reveal only after 50%
   if (percent >= 50) revealAll();
 }
 
@@ -610,16 +643,13 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 0, 9);
 
-// Lights
 scene.add(new THREE.AmbientLight(0xffffff, 0.7));
 const dir = new THREE.DirectionalLight(0xffffff, 0.8);
 dir.position.set(5, 8, 6);
 scene.add(dir);
 
-// Fog
 scene.fog = new THREE.Fog(0x0b1020, 7, 18);
 
-// Floaty objects
 const floatGroup = new THREE.Group();
 scene.add(floatGroup);
 
@@ -673,29 +703,17 @@ function makeFloatyMesh() {
 }
 for (let i = 0; i < 18; i++) floatGroup.add(makeFloatyMesh());
 
-/* ---------- 3D Heart object ---------- */
 function createHeartMesh() {
-  const x = 0,
-    y = 0;
+  const x = 0, y = 0;
   const heartShape = new THREE.Shape();
   heartShape.moveTo(x + 0.25, y + 0.25);
   heartShape.bezierCurveTo(x + 0.25, y + 0.25, x + 0.2, y, x, y);
   heartShape.bezierCurveTo(x - 0.3, y, x - 0.3, y + 0.35, x - 0.3, y + 0.35);
   heartShape.bezierCurveTo(
-    x - 0.3,
-    y + 0.55,
-    x - 0.1,
-    y + 0.77,
-    x + 0.25,
-    y + 0.95,
+    x - 0.3, y + 0.55, x - 0.1, y + 0.77, x + 0.25, y + 0.95
   );
   heartShape.bezierCurveTo(
-    x + 0.6,
-    y + 0.77,
-    x + 0.8,
-    y + 0.55,
-    x + 0.8,
-    y + 0.35,
+    x + 0.6, y + 0.77, x + 0.8, y + 0.55, x + 0.8, y + 0.35
   );
   heartShape.bezierCurveTo(x + 0.8, y + 0.35, x + 0.8, y, x + 0.5, y);
   heartShape.bezierCurveTo(x + 0.35, y, x + 0.25, y + 0.25, x + 0.25, y + 0.25);
@@ -708,7 +726,6 @@ function createHeartMesh() {
     bevelSegments: 6,
     steps: 1,
   });
-
   geom.center();
 
   const mat = new THREE.MeshStandardMaterial({
@@ -729,14 +746,12 @@ function createHeartMesh() {
 const heartMesh = createHeartMesh();
 scene.add(heartMesh);
 
-/* ---------- Mouse parallax ---------- */
 const mouse = { x: 0, y: 0 };
 window.addEventListener("mousemove", (e) => {
   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
 });
 
-/* ---------- Animate ---------- */
 let running = true;
 
 function animate(t) {
@@ -744,16 +759,8 @@ function animate(t) {
 
   const time = t * 0.001;
 
-  camera.position.x = THREE.MathUtils.lerp(
-    camera.position.x,
-    mouse.x * 0.6,
-    0.05,
-  );
-  camera.position.y = THREE.MathUtils.lerp(
-    camera.position.y,
-    mouse.y * 0.4,
-    0.05,
-  );
+  camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.6, 0.05);
+  camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * 0.4, 0.05);
   camera.lookAt(0, 0, 0);
 
   floatGroup.children.forEach((m, idx) => {
@@ -774,7 +781,6 @@ function animate(t) {
     if (m.position.z < -4) m.position.z = 4;
   });
 
-  // Heart rotation
   heartMesh.rotation.y += 0.006;
   heartMesh.rotation.x += 0.002;
 
