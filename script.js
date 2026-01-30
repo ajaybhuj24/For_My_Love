@@ -1,7 +1,83 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
 
 const heroHover = document.getElementById("heroHover");
+/* =========================================================
+   PIN LOCK (PIN = 9811)  [client-side gate]
+========================================================= */
+const pinOverlay = document.getElementById("pinOverlay");
+const pinInput = document.getElementById("pinInput");
+const pinBtn = document.getElementById("pinBtn");
+const pinError = document.getElementById("pinError");
 
+// SHA-256("9811") => stored hash (so PIN isn't plain in code)
+const PIN_HASH = "f9e3ebbfd1b8975f9408d310959c05e6a80fd9517398a3758cc93dbcabb49673";
+const PIN_KEY = "puja_pin_unlocked_v1";
+
+async function sha256Hex(text) {
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function lockPageScroll(lock) {
+  document.documentElement.style.overflow = lock ? "hidden" : "";
+  document.body.style.overflow = lock ? "hidden" : "";
+}
+
+async function tryUnlock() {
+  if (!pinInput) return;
+  const entered = (pinInput.value || "").trim();
+
+  if (entered.length !== 4) {
+    if (pinError) pinError.textContent = "Enter 4 digits 🙂";
+    return;
+  }
+
+  const enteredHash = await sha256Hex(entered);
+
+  if (enteredHash === PIN_HASH) {
+    localStorage.setItem(PIN_KEY, "1");
+    if (pinOverlay) pinOverlay.classList.add("hide");
+    lockPageScroll(false);
+
+    if (pinError) pinError.textContent = "";
+    if (pinInput) pinInput.value = "";
+
+    // Optional: small celebration on unlock
+    if (typeof confetti === "function") {
+      confetti({ particleCount: 90, spread: 70, origin: { x: 0.5, y: 0.35 } });
+    }
+  } else {
+    if (pinError) pinError.textContent = "Wrong PIN 😅 Try again.";
+    if (pinInput) pinInput.value = "";
+    pinInput?.focus();
+  }
+}
+
+function initPinGate() {
+  const unlocked = localStorage.getItem(PIN_KEY) === "1";
+  if (unlocked) {
+    pinOverlay?.classList.add("hide");
+    lockPageScroll(false);
+  } else {
+    pinOverlay?.classList.remove("hide");
+    lockPageScroll(true);
+    setTimeout(() => pinInput?.focus(), 50);
+  }
+}
+
+pinBtn?.addEventListener("click", tryUnlock);
+
+pinInput?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") tryUnlock();
+});
+
+// Only allow digits typed (nice UX)
+pinInput?.addEventListener("input", () => {
+  pinInput.value = pinInput.value.replace(/\D/g, "").slice(0, 4);
+});
+
+initPinGate();
 /* =========================================================
    MUSIC PLAYER
 ========================================================= */
@@ -942,3 +1018,4 @@ if (gameStartBtn) {
 } else {
   console.warn("Balloon game: #gameStartBtn not found in HTML.");
 }
+
