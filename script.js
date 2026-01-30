@@ -804,3 +804,141 @@ window.addEventListener("resize", () => {
   sizeScratchCanvas();
   drawCover();
 });
+
+/* =========================================================
+   BALLOON POP GAME (WORKING)
+========================================================= */
+const balloonStage = document.getElementById("balloonStage");
+const gameStartBtn = document.getElementById("gameStartBtn");
+const gameTimeEl = document.getElementById("gameTime");
+const gameScoreEl = document.getElementById("gameScore");
+const gameResult = document.getElementById("gameResult");
+
+let gameRunning = false;
+let score = 0;
+let timeLeft = 30;
+let spawnTimer = null;
+let tickTimer = null;
+
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function setGameUI() {
+  if (gameTimeEl) gameTimeEl.textContent = String(timeLeft);
+  if (gameScoreEl) gameScoreEl.textContent = String(score);
+}
+
+function clearStage() {
+  if (!balloonStage) return;
+  balloonStage.innerHTML = "";
+}
+
+function popBalloon(el) {
+  if (!el || el.classList.contains("pop")) return;
+
+  el.classList.add("pop");
+  score += 1;
+  setGameUI();
+
+  if (typeof confetti === "function" && score % 7 === 0) {
+    confetti({ particleCount: 35, spread: 60, origin: { x: 0.5, y: 0.7 } });
+  }
+
+  setTimeout(() => el.remove(), 220);
+}
+
+function createBalloon() {
+  if (!balloonStage || !gameRunning) return;
+
+  const b = document.createElement("div");
+  b.className = "balloon";
+
+  const size = Math.floor(rand(42, 82));
+  b.style.width = `${size}px`;
+  b.style.height = `${Math.floor(size * 1.18)}px`;
+
+  const left = rand(8, 92);
+  b.style.left = `${left}%`;
+
+  const hue = Math.floor(rand(0, 360));
+  b.style.background = `hsla(${hue}, 85%, 65%, 0.95)`;
+
+  const dur = rand(3.8, 6.2);
+  b.style.animationDuration = `${dur}s`;
+
+  b.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    popBalloon(b);
+  });
+
+  b.addEventListener("click", () => popBalloon(b));
+
+  b.addEventListener("animationend", () => {
+    // balloon floated away
+    b.remove();
+  });
+
+  balloonStage.appendChild(b);
+
+  // prevent too many balloons
+  const maxBalloons = 22;
+  if (balloonStage.children.length > maxBalloons) {
+    balloonStage.removeChild(balloonStage.firstElementChild);
+  }
+}
+
+function endGame() {
+  gameRunning = false;
+  clearInterval(spawnTimer);
+  clearInterval(tickTimer);
+  spawnTimer = null;
+  tickTimer = null;
+
+  if (gameStartBtn) gameStartBtn.disabled = false;
+
+  if (gameResult) {
+    gameResult.classList.add("show");
+    gameResult.textContent = `Game over 🎉 Your score: ${score}`;
+  }
+
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 120, spread: 90, origin: { x: 0.5, y: 0.65 } });
+  }
+}
+
+function startGame() {
+  if (!balloonStage) return;
+
+  clearStage();
+  score = 0;
+  timeLeft = 30;
+  gameRunning = true;
+
+  if (gameResult) {
+    gameResult.classList.remove("show");
+    gameResult.textContent = "";
+  }
+
+  setGameUI();
+  if (gameStartBtn) gameStartBtn.disabled = true;
+
+  // spawn balloons
+  spawnTimer = setInterval(createBalloon, 520);
+
+  // countdown timer
+  tickTimer = setInterval(() => {
+    timeLeft -= 1;
+    setGameUI();
+    if (timeLeft <= 0) endGame();
+  }, 1000);
+
+  // spawn a few instantly
+  for (let i = 0; i < 5; i++) createBalloon();
+}
+
+if (gameStartBtn) {
+  gameStartBtn.addEventListener("click", startGame);
+} else {
+  console.warn("Balloon game: #gameStartBtn not found in HTML.");
+}
